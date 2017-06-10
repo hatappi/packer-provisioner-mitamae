@@ -98,25 +98,25 @@ func (mp *MitamaeProvisioner) getMItamaeFileName(comm packer.Communicator) (stri
 	if stderr.String() != "" {
 		return "", errors.New(stderr.String())
 	}
-	os_arch := stdout.String()
+	osArch := stdout.String()
 
-	os := regexp.MustCompile(`^[^-]+-`).ReplaceAllString(os_arch, "")
+	os := regexp.MustCompile(`^[^-]+-`).ReplaceAllString(osArch, "")
 	switch os {
 	case "linux", "darwin":
-		return fmt.Sprintf("mitamae-%s", os_arch), nil
+		return fmt.Sprintf("mitamae-%s", osArch), nil
 	default:
-		return "", fmt.Errorf("%s is not support.", os_arch)
+		return "", fmt.Errorf("%s is not support.", osArch)
 	}
 }
 
 func (mp *MitamaeProvisioner) downloadMItamae(ui packer.Ui, comm packer.Communicator, filename string) error {
-	download_url := fmt.Sprintf("https://github.com/itamae-kitchen/mitamae/releases/download/%s/%s", mp.config.MitamaeVersion, filename)
-	bin_path := fmt.Sprintf("%s/%s", mp.config.BinDir, filename)
+	downloadUrl := fmt.Sprintf("https://github.com/itamae-kitchen/mitamae/releases/download/%s/%s", mp.config.MitamaeVersion, filename)
+	binPath := fmt.Sprintf("%s/%s", mp.config.BinDir, filename)
 
-	log.Printf("Start MItamae Download from %s to %s", download_url, bin_path)
+	log.Printf("Start MItamae Download from %s to %s", downloadUrl, binPath)
 
 	var cmd packer.RemoteCmd
-	cmd.Command = fmt.Sprintf("wget %s -q -P %s -O %s && chmod +x %s", download_url, mp.config.BinDir, filename, bin_path)
+	cmd.Command = fmt.Sprintf("wget %s -q -P %s -O %s && chmod +x %s", downloadUrl, mp.config.BinDir, filename, binPath)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	if err := comm.Start(&cmd); err != nil {
@@ -133,10 +133,10 @@ func (mp *MitamaeProvisioner) downloadMItamae(ui packer.Ui, comm packer.Communic
 }
 
 func (mp *MitamaeProvisioner) execRecipe(ui packer.Ui, comm packer.Communicator, filename string) error {
-	bin_path := fmt.Sprintf("%s/%s", mp.config.BinDir, filename)
+	binPath := fmt.Sprintf("%s/%s", mp.config.BinDir, filename)
 
 	var cmd packer.RemoteCmd
-	cmd.Command = fmt.Sprintf("%s local %s %s", bin_path, mp.config.Option, mp.config.RecipePath)
+	cmd.Command = fmt.Sprintf("%s local %s %s", binPath, mp.config.Option, mp.config.RecipePath)
 	if err := cmd.StartWithUi(comm, ui); err != nil {
 		return err
 	}
