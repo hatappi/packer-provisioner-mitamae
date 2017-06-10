@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
+	"os"
+	"regexp"
+
 	"github.com/hashicorp/packer/common"
 	"github.com/hashicorp/packer/helper/config"
 	"github.com/hashicorp/packer/packer"
 	"github.com/hashicorp/packer/packer/plugin"
 	"github.com/hashicorp/packer/template/interpolate"
-	"log"
-	"os"
-	"regexp"
 )
 
 type Config struct {
@@ -21,7 +22,7 @@ type Config struct {
 
 	BinDir string `mapstructure:"bin_dir"`
 
-  Option string
+	Option string
 
 	RecipePath string `mapstructure:"recipe_path"`
 
@@ -112,7 +113,7 @@ func (mp *MitamaeProvisioner) downloadMItamae(ui packer.Ui, comm packer.Communic
 	download_url := fmt.Sprintf("https://github.com/itamae-kitchen/mitamae/releases/download/%s/%s", mp.config.MitamaeVersion, filename)
 	bin_path := fmt.Sprintf("%s/%s", mp.config.BinDir, filename)
 
-  log.Printf("Start MItamae Download from %s to %s", download_url, bin_path)
+	log.Printf("Start MItamae Download from %s to %s", download_url, bin_path)
 
 	var cmd packer.RemoteCmd
 	cmd.Command = fmt.Sprintf("wget %s -q -P %s -O %s && chmod +x %s", download_url, mp.config.BinDir, filename, bin_path)
@@ -126,7 +127,7 @@ func (mp *MitamaeProvisioner) downloadMItamae(ui packer.Ui, comm packer.Communic
 		return errors.New(stderr.String())
 	}
 
-  log.Printf("Success MItamae Download")
+	log.Printf("Success MItamae Download")
 
 	return nil
 }
