@@ -116,7 +116,7 @@ func (mp *MitamaeProvisioner) downloadMItamae(ui packer.Ui, comm packer.Communic
 	log.Printf("Start MItamae Download from %s to %s", downloadUrl, binPath)
 
 	var cmd packer.RemoteCmd
-	cmd.Command = fmt.Sprintf("wget %s -q -P %s -O %s && chmod +x %s", downloadUrl, mp.config.BinDir, filename, binPath)
+	cmd.Command = fmt.Sprintf("wget %s -q -O %s && chmod +x %s", downloadUrl, binPath, binPath)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	if err := comm.Start(&cmd); err != nil {
