@@ -1,0 +1,30 @@
+{
+  "builders":[{
+    "type": "docker",
+    "image": "ubuntu",
+    "export_path": "image.tar"
+  }],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "./recipe.rb",
+      "destination": "/tmp/recipe.rb"
+    },
+    {
+      "type": "shell",
+      "inline": ["apt-get update -y", "apt-get install wget -y"]
+    },
+    {
+      "type": "mitamae",
+      "recipe_path": "/tmp/recipe.rb"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-import",
+        "repository": "packer-provisioner-mitamae/sample"
+      }
+    ]
+  ]
+}
