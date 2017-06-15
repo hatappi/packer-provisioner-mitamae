@@ -1,0 +1,10 @@
+language: go
+install:
+  - make dependency
+deploy:
+  provider: script
+  script: sh script/travisci/deploy.sh
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
