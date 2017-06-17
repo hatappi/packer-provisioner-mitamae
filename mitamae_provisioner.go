@@ -26,6 +26,8 @@ type Config struct {
 
 	RecipePath string `mapstructure:"recipe_path"`
 
+	WorkingDirectory string `mapstructure:"working_directory"`
+
 	ctx interpolate.Context
 }
 
@@ -136,7 +138,11 @@ func (mp *MitamaeProvisioner) execRecipe(ui packer.Ui, comm packer.Communicator,
 	binPath := fmt.Sprintf("%s/%s", mp.config.BinDir, filename)
 
 	var cmd packer.RemoteCmd
-	cmd.Command = fmt.Sprintf("%s local %s %s", binPath, mp.config.Option, mp.config.RecipePath)
+	command := fmt.Sprintf("%s local %s %s", binPath, mp.config.Option, mp.config.RecipePath)
+	if mp.config.WorkingDirectory != "" {
+		command = fmt.Sprintf("cd %s && ", mp.config.WorkingDirectory) + command
+	}
+	cmd.Command = command
 	if err := cmd.StartWithUi(comm, ui); err != nil {
 		return err
 	}
