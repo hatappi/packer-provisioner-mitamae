@@ -1,3 +1,6 @@
+## v0.0.5
+- fix `sudo` option bug
+
 ## v0.0.4
 - support `sudo` option
 
