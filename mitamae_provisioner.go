@@ -53,10 +53,6 @@ func (mp *MitamaeProvisioner) Prepare(raws ...interface{}) error {
 		return errors.New("recipe_path is required")
 	}
 
-	if mp.config.Sudo == "" {
-		mp.config.Sudo = false
-	}
-
 	if mp.config.BinDir == "" {
 		mp.config.BinDir = "/usr/local/bin"
 	}
