@@ -1,3 +1,6 @@
+## v0.0.4
+- support `sudo` option
+
 ## v0.0.3
 - support `working_directory` option.
 
