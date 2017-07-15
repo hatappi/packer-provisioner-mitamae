@@ -18,6 +18,8 @@ import (
 type Config struct {
 	common.PackerConfig `mapstructure:",squash"`
 
+	Sudo bool
+
 	MitamaeVersion string `mapstructure:"mitamae_version"`
 
 	BinDir string `mapstructure:"bin_dir"`
@@ -49,6 +51,10 @@ func (mp *MitamaeProvisioner) Prepare(raws ...interface{}) error {
 
 	if mp.config.RecipePath == "" {
 		return errors.New("recipe_path is required")
+	}
+
+	if mp.config.Sudo == "" {
+		mp.config.Sudo = false
 	}
 
 	if mp.config.BinDir == "" {
@@ -139,9 +145,13 @@ func (mp *MitamaeProvisioner) execRecipe(ui packer.Ui, comm packer.Communicator,
 
 	var cmd packer.RemoteCmd
 	command := fmt.Sprintf("%s local %s %s", binPath, mp.config.Option, mp.config.RecipePath)
+	if mp.config.Sudo {
+		command = "sudo " + command
+	}
 	if mp.config.WorkingDirectory != "" {
 		command = fmt.Sprintf("cd %s && ", mp.config.WorkingDirectory) + command
 	}
+
 	cmd.Command = command
 	if err := cmd.StartWithUi(comm, ui); err != nil {
 		return err
